@@ -83,7 +83,7 @@ Navigate your browser to: `http://127.0.0.1:5000/`
 
 There's not much there.  But it's all you get, so **good luck**.
 
-If you come with a wildly different or cleaner solution then my own, feel free to send a `pull request` with a name, I'm happy to add it in and give creds.
+If you come up with a wildly different or cleaner solution then my own, feel free to send a `pull request` with a name, I'm happy to add it in and give creds.
 
 ### Run the included solution
 
