@@ -8,6 +8,8 @@ This is an interview-style coding challenge used by [redacted] to screen applica
 
 This repository includes a web server that hosts the challenge. **You can run the server and solve the problem**.
 
+![interview-challeng](https://cloud.githubusercontent.com/assets/5052422/7423470/12a31a68-ef5b-11e4-9cad-4203d7f1ffc3.png)
+
 ## Skills Tested
 
 The solution requires a number of good intermediate level programming skills, including the following:
@@ -25,8 +27,6 @@ In my own solution, in working with uncertainty, I leveraged the following:
 - decorators
 - local response caching, and
 - monkey patching `requests` to be more specialized
-
-
 
 ## Description
 
