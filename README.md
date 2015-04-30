@@ -54,11 +54,13 @@ If `redis` or `redislite` fails, don't worry about it.  There's a fallback optio
 
 ### Migrate
 
-There is no actual database, `.json` is perfectly fine for this. The original puzzle likely used `MongoDB` and `migrate.py` simulates the results. The `json` file  is built and used by the server to serve pages.  The logic is dynamic, it can encode your own custom message.  
+Create a JSON document to serve page data.  
 
 ```sh
 make migrate # python migrate.py
 ```
+
+There is no actual database, `.json` is perfectly fine for this. The original puzzle likely used `MongoDB`.  `migrate.py` creates a json file that mocks the original structure. Once the `json` file  is built, the server can use it serve pages.  The logic is dynamic, it can encode your own custom message.
 
 ### Server
 
@@ -83,7 +85,7 @@ Navigate your browser to: `http://127.0.0.1:5000/`
 
 There's not much there.  But it's all you get, so **good luck**.
 
-If you come up with a wildly different or cleaner solution then my own, feel free to send a `pull request` with a name, I'm happy to add it in and give creds.
+If you come up with a wildly different solution, a cleaner solution, or you do it in a different language, definitely share it. Send a `pull request` with a named file, and add yourself to the credits. Make up a title for your role--just make sure it sounds slightly less important then mine `:)`. Kidding, you can be CEO of the ninja convention, but you have to solve the puzzle--honor system.  I'm happy to add it, give 'creds'.
 
 ### Run the included solution
 
