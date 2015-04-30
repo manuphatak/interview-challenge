@@ -1,9 +1,14 @@
 # interview-challenge
-A web API scavenger hunt, programmatically search for the next clue!
+
+**A web API scavenger hunt, programmatically search for the next clue!**
+
+----------
 
 This is an interview-style coding challenge used by [redacted] to screen applicants.
 
-This repository includes a web server hosting the challenge that you can run and try to solve for yourself.
+This repository includes a web server to that hosts the challenge. **You can run the server and solve the problem**.
+
+## Skills Tested
 
 The solution requires a number of good intermediate level programming skills, including the following:
 
@@ -21,17 +26,19 @@ In my own solution, in working with uncertainty, I leveraged the following:
 - local response caching, and
 - monkey patching `requests` to be more specialized
 
-**Note on programming languages:** the server and my solution is in `Python` 2.7.  The challenge is entirely web-based, you can solve the puzzle using any language you want. 
+
 
 ## Description
 
-This repository is the puzzle reverse-engineered from the ground up. Mostly, I wanted to post my solution, that simple. However, I feel a need to protect the company that's still using this to screen applicants, so by reverse-engineering the puzzle I'm able to hide their identity and hopefully not show up in related google search results.
+This repository is the puzzle reverse-engineered from the ground up.  I wanted to post my solution, it's a good code sample. However, I feel a need to protect the company that's still using this to screen applicants, so by reverse-engineering the puzzle I'm able to hide their identity and hopefully not show up in related google search results.
+
+**Note on programming languages:** The server and provided solution is in `Python` 2.7.  The actual puzzle is entirely web-based, you can solve the puzzle using any language you want. 
 
 ## Getting started
 
-**Note:** If you get lost, there's a simple makefile with commands and description, take a look at it.
+**Note:** If you get lost, there's a simple makefile with commands and description, take a look at it. Or type `make`
 
-Windows users: The makefile is a small convenience. Copy and paste the commands, they should be familiar, e.g. `pip install -r requirements.txt`, `python migrate.py`, etc etc etc.
+**Windows users:** The makefile is a minor convenience. Copy and paste the commands out of it, they should be familiar, e.g. `pip install -r requirements.txt`, `python migrate.py`, etc etc etc.
 
 ### Install
 
@@ -42,12 +49,12 @@ mkvirtualenv interview # optional for virtual env users
 make setup # pip install -r requirements.txt
 ```
 
-If `redis` or `redislite` fails, don't worry about it.  There's a fallback option for caching.  `redislite` requires "python dev headers", google that phrase if you're interested.
+If `redis` or `redislite` fails, don't worry about it.  There's a fallback option for caching.  `redislite` requires "python dev headers", google that phrase if you want to make it work.
 
 
 ### Migrate
 
-Does not use an actual database, `.json` is perfectly fine for this.  Migrate builds the `json` file which is used by the server to serve pages.  The logic is dynamic, it will encode any message to be used by the `challenge_server.py`.  
+There is no actual database, `.json` is perfectly fine for this. The original puzzle likely used `MongoDB` and `migrate.py` simulates the results. The `json` file  is built and used by the server to serve pages.  The logic is dynamic, it can encode your own custom message.  
 
 ```sh
 make migrate # python migrate.py
@@ -56,13 +63,13 @@ make migrate # python migrate.py
 ### Server
 
 ```sh
-make start
+make start # python challenge_server.py
 ```
 
 and 
 
 ```sh
-make stop
+make stop # curl -X POST http://127.0.0.1:5000/shutdown
 ```
 Hopefully self explanatory.
 
@@ -81,7 +88,7 @@ If you come with a wildly different or cleaner solution then my own, feel free t
 ### Run the included solution
 
 ```sh
-make solve
+make solve # python solution/solution.py
 ```
 
 and 
@@ -90,12 +97,12 @@ and
 make solve-clean
 ```
 
-This second option is there simply to delete the cache file it creates.  Persistent caching got setup very early on, I was not sure if it part of the puzzle.  So that needs deleted to prove its actually solving the problem and not cheating.
+`make solve-clean` is there simply to delete the cache file created by the solution.  Persistent caching got setup very early on, I was not sure if it part of the puzzle or not.  So that needs deleted to prove its actually solving the problem and not cheating.
 
 ## Credits
 
 **Lead reverse-engineer** - **Manu Phatak** - bionikspoon@gmail.com
 
-**Puzzle designers** - **[redacted]** - [redacted]@[redacted].com Let's find a way to get you proper credit.
+**Puzzle designers** - **[redacted]** - [redacted]@[redacted].com *Let's find a way to get you proper credit.*
 
 # Good luck, have fun.  
