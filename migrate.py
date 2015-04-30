@@ -142,8 +142,7 @@ if __name__ == '__main__':
     with open(JSON_FILE, 'wb') as f:
         json.dump(flat_data, f, sort_keys=True, indent=2, separators=(',', ': '))
 
-    #: Pretty print a success message with a summary.
-    REDACTED_OUT = True
+    # Pretty print a success message with a summary.
     print "*" * 70
     print "Start Message:"
     print "\n\t".join(wrap("\t%s" % START_MESSAGE))
