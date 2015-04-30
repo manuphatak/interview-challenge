@@ -6,7 +6,7 @@
 
 This is an interview-style coding challenge used by [redacted] to screen applicants.
 
-This repository includes a web server to that hosts the challenge. **You can run the server and solve the problem**.
+This repository includes a web server that hosts the challenge. **You can run the server and solve the problem**.
 
 ## Skills Tested
 
