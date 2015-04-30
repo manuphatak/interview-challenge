@@ -3,7 +3,7 @@
 """
 This script generates the "database" for the server api.  In this case, it's only using
 a json file.  It takes a secret message and expands it into a node tree of a determined
-depth.  The characters of the message are revealed on the max depth.
+depth.  The characters of the message are revealed on the `MAX_DEPTH`.
 
 The tree is dynamically generated, you're free to customize the message.
 """
@@ -24,7 +24,8 @@ END_MESSAGE = "Apply at bionikspoon@gmail.com with your code."
 START_MESSAGE = ("There is something we want to tell you, "
                  "let's see if you can figure this out"
                  " by finding all of our secrets.")
-"""This message is displayed on the first page after the user sets a session"""
+"""This message is displayed on the start page
+after the challenger gets past some early hurdles"""
 
 MAX_DEPTH = 4
 """Depth of the message.  Used to test understanding of recursion and traversing nodes.
@@ -35,7 +36,8 @@ JSON_FILE = 'message.json'
 """Don't change this.  You can, but this is hardcoded into the makefile and the server."""
 
 REDACTED_OUT = True
-"""Redact message from output.  Hopefully you tried to solve this before looking."""
+"""Redact `END_MESSAGE` from the build output.
+Hopefully you tried to solve this before looking."""
 
 logger = logging.getLogger(__name__)
 
@@ -106,7 +108,7 @@ def flatten_tree(groups):
 
 
 def expand_message():
-    """Build all of the documents in order from the MAX_DEPTH down to depth 0."""
+    """Build all of the documents in order from MAX_DEPTH up to depth 0."""
     groups = [[make_document(MAX_DEPTH, secret=letter) for letter in END_MESSAGE]]
 
     for i in reversed(xrange(1, MAX_DEPTH)):
@@ -119,6 +121,7 @@ def expand_message():
 
 
 def redacted_end_message(redacted=True):
+    """Hide `END_MESSAGE` in the build output"""
     re_letters = re.compile('[a-z]', flags=re.I)
     if redacted:
         return re_letters.sub("*", END_MESSAGE)
@@ -130,8 +133,10 @@ if __name__ == '__main__':
     log_format = "%(levelname)s:%(message)s"
     logging.basicConfig(level=logging.DEBUG, format=log_format)
 
+    # Set it up ...
     node_groups = expand_message()
 
+    # ... and knock it down. boom.
     flat_data = flatten_tree(node_groups)
 
     with open(JSON_FILE, 'wb') as f:
