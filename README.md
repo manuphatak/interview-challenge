@@ -107,4 +107,4 @@ make solve-clean
 
 **Puzzle designers** - **[redacted]** - [redacted]@[redacted].com *Let's find a way to get you proper credit.*
 
-# Good luck, have fun.  
+# Good luck, have fun.
