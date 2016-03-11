@@ -10,7 +10,7 @@ help:
 	@echo "clean - remove cache and Python file artifacts"
 
 setup:
-	pip2install -r requirements.txt
+	pip2 install -r requirements.txt
 	pip2 install -r requirements-extras.txt
 
 migrate:
