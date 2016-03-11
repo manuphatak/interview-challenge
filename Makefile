@@ -10,15 +10,15 @@ help:
 	@echo "clean - remove cache and Python file artifacts"
 
 setup:
-	pip2.7 install -r requirements.txt
-	pip2.7 install -r requirements-extras.txt
+	pip2install -r requirements.txt
+	pip2 install -r requirements-extras.txt
 
 migrate:
 	rm -f message.json
-	python2.7 migrate.py
+	python2 migrate.py
 
 start:
-	python2.7 challenge_server.py &
+	python2 challenge_server.py &
 	xdg-open http://127.0.0.1:5000/
 
 stop:
@@ -27,7 +27,7 @@ stop:
 server: start
 
 solve:
-	python2.7 solution/solution.py
+	python2 solution/solution.py
 
 solve-clean: clean solve
 
