@@ -10,8 +10,8 @@ help:
 	@echo "clean - remove cache and Python file artifacts"
 
 setup:
-	pip2 install -r requirements.txt
-	pip2 install -r requirements-extras.txt
+	pip2 install -U -r requirements.txt
+	pip2 install -U -r requirements-extras.txt
 
 migrate:
 	rm -f message.json
