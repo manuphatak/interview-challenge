@@ -1,13 +1,15 @@
-.PHONY: help setup clean start stop migrate solve solve-clean
+.PHONY: help setup clean start stop migrate solve solve-verbose solve-live solve-live-verbose
 
 help:
-	@echo "setup - use pip to install requirements"
-	@echo "migrate - migrate message database"
-	@echo "start - start local server to host challenge"
-	@echo "stop - shutdown local server"
-	@echo "solve - demonstrate solution"
-	@echo "solve-clean - clear the cache and demonstrate solution"
-	@echo "clean - remove cache and Python file artifacts"
+	@echo "setup                pip install requirements"
+	@echo "migrate              create mock database"
+	@echo "start                start local server as background process"
+	@echo "stop                 shutdown local server"
+	@echo "solve                demonstrate solution"
+	@echo "solve-verbose        demonstrate solution with detailed output"
+	@echo "solve-live           demonstrate solution on a live server"
+	@echo "solve-live-verbose   demonstrate solution on a live server with detailed output"
+	@echo "clean                remove file artifacts"
 
 setup:
 	pip2 install -U -r requirements.txt
@@ -24,15 +26,19 @@ start:
 stop:
 	curl -X POST http://127.0.0.1:5000/shutdown
 
-server: start
-
-solve:
+solve: clean
 	python2 solution/solution.py
 
-solve-clean: clean solve
+solve-verbose: clean
+	python2 solution/solution.py --verbose
+
+solve-live: clean
+	python2 solution/solution.py --url http://interview-challenge.manuphatak.com
+
+solve-live-verbose: clean
+	python2 solution/solution.py --url http://interview-challenge.manuphatak.com --verbose
 
 clean:
-	rm -f cache.json
 	rm -f redis.log
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +

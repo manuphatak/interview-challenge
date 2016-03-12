@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # coding=utf-8
-from functools import wraps
 import json
-import os
-from hashlib import md5
-import logging
 import logging.handlers
+import os
+from functools import wraps
+from hashlib import md5
+
 from flask import Flask, jsonify, request
 
 log_file = os.path.join(os.path.dirname(__file__), 'challenge_server.log')
@@ -98,6 +98,7 @@ def shutdown():
     print 'Server shutting down...'
     app.logger.warning('Server shutting down...')
     return ''
+
 
 app.logger.info('Server routes registered.')
 
