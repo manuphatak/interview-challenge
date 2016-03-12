@@ -40,6 +40,15 @@ This repository is the puzzle reverse-engineered from the ground up.  I wanted t
 
 **Windows users:** The makefile is a minor convenience. Copy and paste the commands out of it, they should be familiar, e.g. `pip install -r requirements.txt`, `python migrate.py`, etc etc etc.
 
+### Summary
+
+1. clone the repo
+2. `make setup` to install dependencies and optional dependencies
+3. `make migrate` to create the JSON mock database
+4. `make serve` and `make stop` to control the server
+5. solve the challenge.
+6. rage quit. `make solve` and `make-solve-clean` to see what a solution looks like.
+
 ### Install
 
 ```sh

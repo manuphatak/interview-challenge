@@ -16,7 +16,9 @@ try:
     # noinspection PyUnresolvedReferences
     from werkzeug.contrib.cache import RedisCache
 
-    cache = RedisCache(StrictRedis())
+    cache_file = os.path.join(os.path.dirname(__file__), 'server_cache.rdb')
+
+    cache = RedisCache(StrictRedis(cache_file))
 except ImportError:
     from werkzeug.contrib.cache import SimpleCache
 
