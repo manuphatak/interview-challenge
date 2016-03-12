@@ -4,13 +4,20 @@ from functools import wraps
 import json
 import pprint
 import logging
+import sys
 
 import requests
 from requests.exceptions import HTTPError
 
 
+def get_base():
+    try:
+        return sys.argv[1]
+    except IndexError:
+        return 'http://127.0.0.1:5000'
 
-BASE_URL = 'http://127.0.0.1:5000'
+
+BASE_URL = get_base()
 JSON_CACHE_FILE = 'cache.json'
 local_cache = {}
 log = logging.getLogger(__name__)
@@ -121,7 +128,6 @@ if __name__ == '__main__':
     logging.getLogger('requests').setLevel(logging.INFO)
 
     with saved_cache(JSON_CACHE_FILE):
-
         start = cache_handler('start')
 
         list_of_secret_letters = list(get_next(start['next']))
