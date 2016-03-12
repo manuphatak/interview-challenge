@@ -1,135 +1,146 @@
 # coding=utf-8
-from contextlib import contextmanager
-from functools import wraps
-import json
-import pprint
 import logging
 import sys
-import os
+from functools import partial
+from textwrap import dedent
+from urlparse import urljoin
 
 import requests
 from requests.exceptions import HTTPError
 
+#
+# GLOBALS
+# ============================================================================
 
-def get_base():
-    try:
-        return sys.argv[1]
-    except IndexError:
-        return 'http://127.0.0.1:5000'
-
-
-BASE_URL = get_base()
-JSON_CACHE_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'cache.json')
-local_cache = {}
 log = logging.getLogger(__name__)
+try:
+    url = partial(urljoin, sys.argv[1])
+except IndexError:
+    url = partial(urljoin, 'http://127.0.0.1:5000')
+
+headers = {}
 
 
-def get_with_headers(requests_get):
-    """Decorator, refresh "Session" header if expired."""
-    session_header = dict(Session=None)
+#
+# CORE
+# ============================================================================
 
-    @wraps(requests_get)
-    def wrapper(url, **kwargs):
-        kwargs['headers'] = session_header
+def get_next_secret(path):
+    """Recursively follow a path to yield secrets."""
 
-        try:
-            response = requests_get(url, **kwargs)
-            response.raise_for_status()
+    # Setup, get next resource
+    response = request_next(url(path))
+    # clean response data
+    response_data = normalize_keys(response.json())
 
-        except HTTPError as e:
-            # noinspection PyUnboundLocalVariable
-            if response.json().get('error'):
-                session_header['Session'] = requests_get('{}/get-session'.format(BASE_URL)).text
-                kwargs['headers'] = session_header
-                response = requests_get(url, **kwargs)
-            else:
-                raise e
+    # Guard, response is a leaf
+    if 'secret' in response_data:
+        secret = response_data['secret']
+        log_secret_found(secret, url(path))
+        yield secret
 
-        log.info('GET:{}\nResponse:{}'.format(url, response.text))
-        return response
+    else:
+        next_list = response_data['next']
+        log_next_list(next_list)
 
-    return wrapper
+        # traverse each child branch
+        for next_path in next_list:
+            # yield from results
+            for next_secret in get_next_secret(next_path):
+                yield next_secret
 
 
-@contextmanager
-def ignored(*exception):
-    """Standard utility, ignore exception."""
+def request_next(path, is_retry=False):
+    """Handle requests with custom headers."""
+
+    # Setup, get resource
+    response = requests.get(url(path), headers=headers)
+
+    # handle 404 response
     try:
-        yield
-    except exception:
-        pass
-
-
-@contextmanager
-def saved_cache(file_path):
-    """Load and save cache."""
-    global local_cache
-
-    try:
-        with ignored(IOError):
-            local_cache = json.load(open(file_path))
-        yield
-    finally:
-        json.dump(local_cache, open(file_path, 'wb'), sort_keys=True, indent=2, separators=(',', ': '))
-
-
-def cache_handler(item):
-    """Retrieve item from cache, use requests to populate if missing."""
-    try:
-        if item not in local_cache:
-            response = requests.get('{}/{}'.format(BASE_URL, item))
-            response.raise_for_status()
-            response_json = {k.lower(): v for k, v in response.json().items()}
-            local_cache[item] = response_json
-        else:
-            log.debug('Cache:\n{}:\n{}'.format(item, pprint.pformat(local_cache.get(item))))
-
-        return local_cache.get(item)
+        response.raise_for_status()
     except HTTPError as e:
-        raise e
+
+        # Guard, infinite loop
+        if is_retry:
+            log_response_error('Unable to refresh "Session" token.', headers['Session'], url(path), response.json())
+            raise e
+
+        # Guard, unexpected error
+        if not response.json().get('error'):
+            log_response_error('"error" key missing from response.', headers['Session'], url(path), response.json())
+            raise e
+
+        # request new Session header
+        headers['Session'] = requests.get(url('get-session')).text
+        log.info('New "Session" token: %s', headers['Session'])
+
+        # retry request with updated headers
+        return request_next(path, is_retry=True)
+
+    log.info('GET %s', url(path))
+    log.debug('Response: %s', response.text)
+    return response
 
 
-def get_next(next_list):
-    """Recursive generator, follow chained URL directives, yield secret keys."""
+#
+# UTILS
+# ============================================================================
 
-    # do not iterate through strings
-    next_list = [next_list] if isinstance(next_list, basestring) else next_list
-
-    log.debug('\n'
-              '{1:=<70}\n'
-              'Next List\n'
-              '{1:-<70}\n'
-              '{0}\n'
-              '{1:=<70}'.format('\n'.join(next_list), ''))
-
-    for item in next_list:
-        json_response = cache_handler(item)
-        try:
-            next_item = json_response['next']
-        except KeyError, e:  # Found a dead end in the node tree.
-            if 'secret' in json_response:
-                yield json_response.get('secret')
-                continue
-            else:
-                # Report an actual problem.
-                log.warning('{}:{}:{}'.format(e, item, json_response))
-                raise e
-
-        # Iterate through each item in ``next_item`` list.
-        yield ''.join(list(get_next(next_item)))
+def normalize_keys(data):
+    """Convert keys to lowercase"""
+    return {k.lower(): v for k, v in data.items()}
 
 
-# monkeypatch requests get
-requests.get = get_with_headers(requests.get)
+#
+# LOG UTILS
+# ============================================================================
 
+def log_next_list(next_list):
+    template = dedent("""
+
+        {log_header_1}
+        Next list
+        {log_header_2}
+        {next_list}
+        {log_header_1}
+    """[1:])
+    template_vars = {
+        'log_header_1': '=' * 70, 'log_header_2': '-' * 70, 'next_list': '\n'.join(next_list)
+    }
+
+    log.debug(template.format(**template_vars))
+
+
+def log_secret_found(secret, url):
+    template = dedent("""
+
+        {log_header_1}
+        Secret Found
+        {log_header_2}
+        Url: {url}
+        Secret: {secret}
+        {log_header_1}
+    """[1:])
+    template_vars = {
+        'log_header_1': '-' * 70, 'log_header_2': '~' * 70, 'url': url, 'secret': secret
+    }
+
+    log.debug(template.format(**template_vars))
+
+
+def log_response_error(message, session, full_url, response):
+    log.error(message)
+    log.error('  - SESSION: %s', session)
+    log.error('  - URL: %s', full_url)
+    log.error('  - RESPONSE: %s', response)
+
+
+#
+# MAIN
+# ============================================================================
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
     logging.getLogger('requests').setLevel(logging.INFO)
 
-    with saved_cache(JSON_CACHE_FILE):
-        start = cache_handler('start')
-
-        list_of_secret_letters = list(get_next(start['next']))
-        secret_message = ''.join(list_of_secret_letters)
-
-        print secret_message
+    print ''.join(get_next_secret('start'))

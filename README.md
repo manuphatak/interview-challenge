@@ -8,7 +8,7 @@ This is an interview-style coding challenge used by [redacted] to screen applica
 
 This repository includes a web server that hosts the challenge. **You can run the server and solve the problem**.
 
-![interview-challeng](https://cloud.githubusercontent.com/assets/5052422/7423470/12a31a68-ef5b-11e4-9cad-4203d7f1ffc3.png)
+![interview-challenge](https://cloud.githubusercontent.com/assets/5052422/7423470/12a31a68-ef5b-11e4-9cad-4203d7f1ffc3.png)
 
 ## Skills Tested
 
