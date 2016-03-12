@@ -7,18 +7,17 @@ depth.  The characters of the message are revealed on the `MAX_DEPTH`.
 
 The tree is dynamically generated, you're free to customize the message.
 """
-from collections import deque
 import json
-from hashlib import md5
 import logging
+import re
+from collections import deque
+from hashlib import md5
 from os import urandom
 from random import randint, random, choice
-import re
 from textwrap import wrap
 from time import clock, time
 
-
-END_MESSAGE = "Apply at bionikspoon@gmail.com with your code."
+END_MESSAGE = "Send your solution to bionikspoon@gmail.com with your application."
 """The message to be expanded by the node tree"""
 
 START_MESSAGE = ("There is something we want to tell you, "
@@ -61,12 +60,10 @@ def get_next_key():
 
     A mild test in problem solving and normalizing data.
     """
-    if random() < .85:
+    if random() < .75:
         return "next"
     else:
-        typo = choice((
-            "Next", "nExt", "neXt", "nexT", "NExt", "nEXt", "neXT", "NEXt", "nEXT",
-            "NEXT"))
+        typo = choice(("Next", "nExt", "neXt", "nexT", "NExt", "nEXt", "neXT", "NEXt", "nEXT", "NEXT"))
         logger.info("Purposely added a typo! %s", typo)
         return typo
 
@@ -114,8 +111,7 @@ def expand_message():
     for i in reversed(xrange(1, MAX_DEPTH)):
         groups.append(group_nodes(groups[-1], i))
 
-    start_page = dict(depth=0, id="start", message=START_MESSAGE,
-                      next=[item['id'] for item in groups[-1]])
+    start_page = dict(depth=0, id="start", message=START_MESSAGE, next=[item['id'] for item in groups[-1]])
     groups.append([start_page])
     return groups
 
@@ -150,5 +146,4 @@ if __name__ == '__main__':
     print "\n\t".join(wrap("\t%s" % redacted_end_message(redacted=REDACTED_OUT)))
     print
     print "The database has been successfully migrated."
-    print "\n".join(wrap("**(Optional) Customize these messages in %r and rerun %r" % (
-        __file__, "make migrate")))
+    print "\n".join(wrap("**(Optional) Customize these messages in %r and rerun %r" % (__file__, "make migrate")))
