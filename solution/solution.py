@@ -5,6 +5,7 @@ import json
 import pprint
 import logging
 import sys
+import os
 
 import requests
 from requests.exceptions import HTTPError
@@ -18,7 +19,7 @@ def get_base():
 
 
 BASE_URL = get_base()
-JSON_CACHE_FILE = 'cache.json'
+JSON_CACHE_FILE = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'cache.json')
 local_cache = {}
 log = logging.getLogger(__name__)
 
@@ -38,14 +39,13 @@ def get_with_headers(requests_get):
         except HTTPError as e:
             # noinspection PyUnboundLocalVariable
             if response.json().get('error'):
-                session_header['Session'] = requests_get(
-                    '{}/get-session'.format(BASE_URL)).text
+                session_header['Session'] = requests_get('{}/get-session'.format(BASE_URL)).text
                 kwargs['headers'] = session_header
                 response = requests_get(url, **kwargs)
             else:
                 raise e
 
-        log.info("GET:{}\nResponse:{}".format(url, response.text))
+        log.info('GET:{}\nResponse:{}'.format(url, response.text))
         return response
 
     return wrapper
@@ -70,8 +70,7 @@ def saved_cache(file_path):
             local_cache = json.load(open(file_path))
         yield
     finally:
-        json.dump(local_cache, open(file_path, 'wb'), sort_keys=True, indent=2,
-                  separators=(',', ': '))
+        json.dump(local_cache, open(file_path, 'wb'), sort_keys=True, indent=2, separators=(',', ': '))
 
 
 def cache_handler(item):
@@ -83,8 +82,7 @@ def cache_handler(item):
             response_json = {k.lower(): v for k, v in response.json().items()}
             local_cache[item] = response_json
         else:
-            log.debug(
-                'Cache:\n{}:\n{}'.format(item, pprint.pformat(local_cache.get(item))))
+            log.debug('Cache:\n{}:\n{}'.format(item, pprint.pformat(local_cache.get(item))))
 
         return local_cache.get(item)
     except HTTPError as e:
@@ -97,12 +95,12 @@ def get_next(next_list):
     # do not iterate through strings
     next_list = [next_list] if isinstance(next_list, basestring) else next_list
 
-    log.debug("\n"
-              "{1:=<70}\n"
-              "Next List\n"
-              "{1:-<70}\n"
-              "{0}\n"
-              "{1:=<70}".format('\n'.join(next_list), ''))
+    log.debug('\n'
+              '{1:=<70}\n'
+              'Next List\n'
+              '{1:-<70}\n'
+              '{0}\n'
+              '{1:=<70}'.format('\n'.join(next_list), ''))
 
     for item in next_list:
         json_response = cache_handler(item)
@@ -119,6 +117,7 @@ def get_next(next_list):
 
         # Iterate through each item in ``next_item`` list.
         yield ''.join(list(get_next(next_item)))
+
 
 # monkeypatch requests get
 requests.get = get_with_headers(requests.get)
