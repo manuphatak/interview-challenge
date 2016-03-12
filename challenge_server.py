@@ -96,8 +96,10 @@ def shutdown():
         raise RuntimeError('Not running with the Werkzeug Server')
     func()
     print 'Server shutting down...'
+    app.logger.warning('Server shutting down...')
     return ''
 
+app.logger.info('Server routes registered.')
 
 if __name__ == '__main__':
     app.run(debug=True)
