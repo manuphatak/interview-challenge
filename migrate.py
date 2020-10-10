@@ -17,12 +17,12 @@ from random import randint, random, choice
 from textwrap import wrap
 from time import clock, time
 
-END_MESSAGE = "Send your solution to bionikspoon@gmail.com with your application."
+END_MESSAGE = "Congratulations!  Send your solution to bionikspoon@gmail.com to receive your prize."
 """The message to be expanded by the node tree"""
 
-START_MESSAGE = ("There is something we want to tell you, "
+START_MESSAGE = ("There is something I want to show you, "
                  "let's see if you can figure this out"
-                 " by finding all of our secrets.")
+                 " by finding all of my secrets.")
 """This message is displayed on the start page
 after the challenger gets past some early hurdles"""
 
@@ -60,7 +60,7 @@ def get_next_key():
 
     A mild test in problem solving and normalizing data.
     """
-    if random() < .75:
+    if random() < .9:
         return "next"
     else:
         typo = choice(("Next", "nExt", "neXt", "nexT", "NExt", "nEXt", "neXT", "NEXt", "nEXT", "NEXT"))
