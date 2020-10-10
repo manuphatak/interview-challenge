@@ -147,7 +147,7 @@ def redacted_end_message(redacted=True):
         return END_MESSAGE
 
 
-if __name__ == "__main__":
+def run():
     log_format = "%(levelname)s:%(message)s"
     logging.basicConfig(level=logging.DEBUG, format=log_format)
 
@@ -176,3 +176,7 @@ if __name__ == "__main__":
             )
         )
     )
+
+
+if __name__ == "__main__":
+    run()

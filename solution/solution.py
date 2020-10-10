@@ -201,7 +201,7 @@ def log_response_error(message, session, full_url, response):
 #
 # MAIN
 # ============================================================================
-if __name__ == "__main__":
+def run():
     logging.basicConfig(level=args.log_level)
     logging.getLogger("requests").setLevel(logging.WARNING)
 
@@ -209,3 +209,7 @@ if __name__ == "__main__":
         parser.exit(0, "".join(get_next_secret("start")))
     except Exception as error:
         parser.error(error)
+
+
+if __name__ == "__main__":
+    run()

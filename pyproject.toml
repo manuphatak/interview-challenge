@@ -1,9 +1,17 @@
 [tool.poetry]
 name = "interview-challenge"
 version = "0.0.0"
-description = "A web API scavenger hunt, programmatically search for the next clue!"
+description = "A fun web service scavenger hunt and brain teaser. Programmatically search for the next clue!"
 authors = ["Manu Phatak <bionikspoon@gmail.com>"]
 license = "MIT"
+readme = "README.md"
+repository = "https://github.com/bionikspoon/interview-challenge"
+keywords = ["scavenger hunt", "flask", "brain teaser", "interview challenge"]
+packages = [
+    { include = "challenge_server.py" },
+    { include = "solution/**/*.py" },
+    { include = "migrate.py" },
+]
 
 [tool.poetry.dependencies]
 python = "3.9.0"
@@ -18,3 +26,9 @@ black = {version = "^20.8b1", allow-prereleases = true}
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+
+[tool.poetry.scripts]
+migrate = "migrate:run"
+serve-dev = "challenge_server:run"
+solve = "solution.solution:run"

@@ -103,5 +103,10 @@ def shutdown():
 
 app.logger.info("Server routes registered.")
 
-if __name__ == "__main__":
+
+def run():
     app.run(debug=True)
+
+
+if __name__ == "__main__":
+    run()
