@@ -5,6 +5,7 @@ import logging.handlers
 import os
 from functools import wraps
 from hashlib import md5
+from uuid import uuid4
 
 from flask import Flask, jsonify, request
 from flask_caching.backends import FileSystemCache
@@ -69,18 +70,19 @@ def index():
     return 'On the right track. You can start here: "/start" '
 
 
-@app.route("/<page_id>")
+@app.route("/start", defaults={"page_id": "start"})
+@app.route("/<uuid:page_id>")
 @validate_session
 def start(page_id):
     try:
-        return jsonify(secret_message[page_id])
+        return jsonify(secret_message[str(page_id)])
     except KeyError:
         return response_error("Page not found", 404)
 
 
 @app.route("/get-session")
 def get_session():
-    key = md5(os.urandom(32)).hexdigest()
+    key = str(uuid4())
     cache.set(key, 10, timeout=60)
 
     app.logger.info("New Key: %s" % key)

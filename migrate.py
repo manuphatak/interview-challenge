@@ -17,7 +17,7 @@ from hashlib import md5
 from os import urandom
 from random import randint, random, choice
 from textwrap import wrap
-from time import perf_counter, time
+from uuid import uuid4
 
 END_MESSAGE = "Congratulations!  Send your solution to bionikspoon@gmail.com to receive your prize."
 """The message to be expanded by the node tree"""
@@ -52,9 +52,9 @@ def make_document(depth, **kwargs):
     The original puzzle was likely served from a MongoDB, this is simulating that
     document structure.
     """
-    random_and_unique_things = "{:f}{:f}{}".format(perf_counter(), time(), urandom(32))
+
     kwargs["depth"] = depth
-    kwargs["id"] = md5(random_and_unique_things.encode("utf-8")).hexdigest()
+    kwargs["id"] = str(uuid4())
     return kwargs
 
 
