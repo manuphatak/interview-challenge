@@ -1,3 +1,0 @@
-redislite==3.0.271
-redis==2.10.5
-gunicorn==19.4.5

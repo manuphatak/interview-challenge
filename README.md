@@ -1,6 +1,6 @@
 # interview-challenge
 
-**A web API scavenger hunt, programmatically search for the next clue!**
+**A fun web service scavenger hunt and brain teaser. Programmatically search for the next clue!**
 
 ----------
 
@@ -12,14 +12,14 @@ This repository includes a web server that hosts the challenge. **You can run th
 
 ## Skills Tested
 
-The solution requires a number of good intermediate level programming skills, including the following:
+The solution requires a number of good programming skills, including the following:
 
-- API `requests` libraries
+- API `requests`
 - custom request payloads and headers
-- '404' error handling
+- error handling
 - recursion
-- traversing tree nodes
-- normalizing data with typos, and
+- traversing tree structures
+- sanitizing data with typos, and
 - general problem solving skills
 
 In my own solution, in working with uncertainty, I leveraged the following:
@@ -30,15 +30,14 @@ In my own solution, in working with uncertainty, I leveraged the following:
 
 ## Description
 
-This repository is the puzzle reverse-engineered from the ground up.  I wanted to post my solution, it's a good code sample. However, I feel a need to protect the company that's still using this to screen applicants, so by reverse-engineering the puzzle I'm able to hide their identity and hopefully not show up in related google search results.
+In this repository I reverse-engineered from the ground up a puzzle I found on the internet..
 
-**Note on programming languages:** The server and provided solution is in `Python` 2.7.  The actual puzzle is entirely web-based, you can solve the puzzle using any language you want. 
+**Note on programming languages:** The server and provided solution is in `Python`.  The actual puzzle is entirely web-based, you can solve the puzzle using any language you want.
 
 ## Getting started
 
 **Note:** If you get lost, there's a simple makefile with commands and description, take a look at it. Or type `make`
 
-**Windows users:** The makefile is a minor convenience. Copy and paste the commands out of it, they should be familiar, e.g. `pip install -r requirements.txt`, `python migrate.py`, etc etc etc.
 
 ### Summary
 
@@ -47,23 +46,21 @@ This repository is the puzzle reverse-engineered from the ground up.  I wanted t
 3. `make migrate` to create the JSON mock database
 4. `make serve` and `make stop` to control the server
 5. solve the challenge.
-6. rage quit. `make solve` and `make-solve-clean` to see what a solution looks like.
+6. rage quit. `make solve` to see what a solution looks like.
 
 ### Install
 
 ```sh
 git clone git@github.com:bionikspoon/interview-challenge.git && \
 cd interview-challenge
-mkvirtualenv interview # optional for virtual env users
-make setup # pip install -r requirements.txt
+brew install poetry
+make setup # poetry install
 ```
-
-If `redis` or `redislite` fails, don't worry about it.  There's a fallback option for caching.  `redislite` requires "python dev headers", google that phrase if you want to make it work.
 
 
 ### Migrate
 
-Create a JSON document to serve page data.  
+Create a JSON document to serve page data.
 
 ```sh
 make migrate # python migrate.py
@@ -77,7 +74,7 @@ There is no actual database, `.json` is perfectly fine for this. The original pu
 make start # python challenge_server.py
 ```
 
-and 
+and
 
 ```sh
 make stop # curl -X POST http://127.0.0.1:5000/shutdown
@@ -101,14 +98,6 @@ If you come up with a wildly different solution, a cleaner solution, or you do i
 ```sh
 make solve # python solution/solution.py
 ```
-
-and 
-
-```sh
-make solve-clean
-```
-
-`make solve-clean` is there simply to delete the cache file created by the solution.  Persistent caching got setup very early on, I was not sure if it part of the puzzle or not.  So that needs deleted to prove its actually solving the problem and not cheating.
 
 ## Credits
 
