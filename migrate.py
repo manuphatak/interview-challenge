@@ -20,9 +20,11 @@ from time import clock, time
 END_MESSAGE = "Congratulations!  Send your solution to bionikspoon@gmail.com to receive your prize."
 """The message to be expanded by the node tree"""
 
-START_MESSAGE = ("There is something I want to show you, "
-                 "let's see if you can figure this out"
-                 " by finding all of my secrets.")
+START_MESSAGE = (
+    "There is something I want to show you, "
+    "let's see if you can figure this out"
+    " by finding all of my secrets."
+)
 """This message is displayed on the start page
 after the challenger gets past some early hurdles"""
 
@@ -31,7 +33,7 @@ MAX_DEPTH = 4
  The message expansion algorithm isn't too smart, if this is set too high, the first
  several layers will only share one directive to go to the next link."""
 
-JSON_FILE = 'message.json'
+JSON_FILE = "message.json"
 """Don't change this.  You can, but this is hardcoded into the makefile and the server."""
 
 REDACTED_OUT = True
@@ -49,8 +51,8 @@ def make_document(depth, **kwargs):
     document structure.
     """
     random_and_unique_things = "{:f}{:f}{}".format(clock(), time(), urandom(32))
-    kwargs['depth'] = depth
-    kwargs['id'] = md5(random_and_unique_things).hexdigest()
+    kwargs["depth"] = depth
+    kwargs["id"] = md5(random_and_unique_things).hexdigest()
     return kwargs
 
 
@@ -60,10 +62,23 @@ def get_next_key():
 
     A mild test in problem solving and normalizing data.
     """
-    if random() < .9:
+    if random() < 0.9:
         return "next"
     else:
-        typo = choice(("Next", "nExt", "neXt", "nexT", "NExt", "nEXt", "neXT", "NEXt", "nEXT", "NEXT"))
+        typo = choice(
+            (
+                "Next",
+                "nExt",
+                "neXt",
+                "nexT",
+                "NExt",
+                "nEXt",
+                "neXT",
+                "NEXt",
+                "nEXT",
+                "NEXT",
+            )
+        )
         logger.info("Purposely added a typo! %s", typo)
         return typo
 
@@ -84,7 +99,7 @@ def group_nodes(child_doc_list, group_depth):
             parent_next = []
             for _ in xrange(randint(1, 4)):  # chunk size
                 child_doc = child_doc_list.popleft()
-                parent_next.append(child_doc['id'])
+                parent_next.append(child_doc["id"])
 
         except IndexError:
             break
@@ -101,7 +116,7 @@ def flatten_tree(groups):
     While building, order and grouping matters.  For the server and the puzzle a flat
     structure makes more sense.
     """
-    return {item['id']: item for data in groups for item in data}
+    return {item["id"]: item for data in groups for item in data}
 
 
 def expand_message():
@@ -111,21 +126,26 @@ def expand_message():
     for i in reversed(xrange(1, MAX_DEPTH)):
         groups.append(group_nodes(groups[-1], i))
 
-    start_page = dict(depth=0, id="start", message=START_MESSAGE, next=[item['id'] for item in groups[-1]])
+    start_page = dict(
+        depth=0,
+        id="start",
+        message=START_MESSAGE,
+        next=[item["id"] for item in groups[-1]],
+    )
     groups.append([start_page])
     return groups
 
 
 def redacted_end_message(redacted=True):
     """Hide `END_MESSAGE` in the build output"""
-    re_letters = re.compile('[a-z]', flags=re.I)
+    re_letters = re.compile("[a-z]", flags=re.I)
     if redacted:
         return re_letters.sub("*", END_MESSAGE)
     else:
         return END_MESSAGE
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     log_format = "%(levelname)s:%(message)s"
     logging.basicConfig(level=logging.DEBUG, format=log_format)
 
@@ -135,15 +155,22 @@ if __name__ == '__main__':
     # ... and knock it down. boom.
     flat_data = flatten_tree(node_groups)
 
-    with open(JSON_FILE, 'wb') as f:
-        json.dump(flat_data, f, sort_keys=True, indent=2, separators=(',', ': '))
+    with open(JSON_FILE, "wb") as f:
+        json.dump(flat_data, f, sort_keys=True, indent=2, separators=(",", ": "))
 
     # Pretty print a success message with a summary.
-    print "*" * 70
-    print "Start Message:"
-    print "\n\t".join(wrap("\t%s" % START_MESSAGE))
-    print "End Message: %s" % "(redacted)" if REDACTED_OUT else ""
-    print "\n\t".join(wrap("\t%s" % redacted_end_message(redacted=REDACTED_OUT)))
-    print
-    print "The database has been successfully migrated."
-    print "\n".join(wrap("**(Optional) Customize these messages in %r and rerun %r" % (__file__, "make migrate")))
+    print("*" * 70)
+    print("Start Message:")
+    print("\n\t".join(wrap("\t%s" % START_MESSAGE)))
+    print("End Message: %s" % "(redacted)" if REDACTED_OUT else "")
+    print("\n\t".join(wrap("\t%s" % redacted_end_message(redacted=REDACTED_OUT))))
+    print()
+    print("The database has been successfully migrated.")
+    print(
+        "\n".join(
+            wrap(
+                "**(Optional) Customize these messages in %r and rerun %r"
+                % (__file__, "make migrate")
+            )
+        )
+    )
