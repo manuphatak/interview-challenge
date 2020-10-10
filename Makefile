@@ -18,27 +18,27 @@ migrate:
 	rm -f message.json
 	poetry run python migrate.py
 
-start:
-	poetry run python challenge_server.py &
-	xdg-open http://127.0.0.1:5000/
+start: clean
+	poetry run python challenge_server.py
 
-stop:
+stop: clean
 	curl -X POST http://127.0.0.1:5000/shutdown
 
-solve: clean
+solve:
 	poetry run python solution/solution.py
 
-solve-verbose: clean
+solve-verbose:
 	poetry run python solution/solution.py --verbose
 
-solve-live: clean
-	poetry run python solution/solution.py --url http://interview-challenge.manuphatak.com
+solve-live:
+	poetry run python solution/solution.py --base http://interview-challenge.manuphatak.com
 
-solve-live-verbose: clean
-	poetry run python solution/solution.py --url http://interview-challenge.manuphatak.com --verbose
+solve-live-verbose:
+	poetry run python solution/solution.py --base http://interview-challenge.manuphatak.com --verbose
 
 clean:
-	rm -f redis.log
+	rm -f challenge_server.log
+	rm -rf tmp/.cache
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +

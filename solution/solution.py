@@ -18,21 +18,17 @@ import requests
 # ============================================================================
 
 
-def url_type(base):
-    return partial(urljoin, base)
-
-
 parser = ArgumentParser(
     description="Solution to scavenger hunt.",
-    epilog="Example: python2 solution.py --verbose -u http://localhost:5000",
+    epilog="Example: python solution.py --verbose -u http://localhost:5000",
 )
 parser.add_argument(
-    "--url",
-    "-u",
-    help="Base URL of the scavenger hunt. Default: http://localhost:5000",
+    "-b",
+    "--base",
     default="http://localhost:5000",
-    type=url_type,
+    help="Base URL of the scavenger hunt. Default: http://localhost:5000",
 )
+
 parser.add_argument(
     "--verbose",
     "-v",
@@ -48,7 +44,7 @@ args = parser.parse_args()
 # GLOBALS
 # ============================================================================
 log = logging.getLogger(__name__)
-url = args.url
+create_url = partial(urljoin, args.base)
 
 headers = {}
 
@@ -62,21 +58,23 @@ def get_next_secret(path):
     """Recursively follow a path to yield secrets."""
 
     # Setup, get next resource
-    response = request_next(url(path))
+    response = request_next(create_url(path))
     # clean response data
     response_data = normalize_keys(response.json())
 
     # Guard, response is a leaf
     if "secret" in response_data:
         secret = response_data["secret"]
-        log_secret_found(secret, url(path))
+        log_secret_found(secret, create_url(path))
         yield secret
 
     # Guard, missing next node.
     elif not response_data.get("next"):
         traceback = sys.exc_info()[2]
         message = 'Missing "next" key in response'
-        log_response_error(message, headers.get("Session"), url(path), response_data)
+        log_response_error(
+            message, headers.get("Session"), create_url(path), response_data
+        )
         raise (KeyError, message, traceback)
 
     else:
@@ -94,7 +92,7 @@ def request_next(path, is_retry=False):
     """Handle requests with custom headers."""
 
     # Setup, get resource
-    response = requests.get(url(path), headers=headers)
+    response = requests.get(create_url(path), headers=headers)
     response_json = response.json()
 
     # handle 404 response
@@ -106,24 +104,28 @@ def request_next(path, is_retry=False):
         if is_retry:
             traceback = sys.exc_info()[2]
             message = 'Unable to refresh "Session" token.'
-            log_response_error(message, headers["Session"], url(path), response_json)
+            log_response_error(
+                message, headers["Session"], create_url(path), response_json
+            )
             raise (type(e), message, traceback)
 
         # Guard, unexpected error
         if not response_json.get("error"):
             traceback = sys.exc_info()[2]
             message = '"error" key missing from response.'
-            log_response_error(message, headers["Session"], url(path), response_json)
+            log_response_error(
+                message, headers["Session"], create_url(path), response_json
+            )
             raise (type(e), message, traceback)
 
         # request new Session header
-        headers["Session"] = requests.get(url("get-session")).text
+        headers["Session"] = requests.get(create_url("get-session")).text
         log.info('NEW "Session" token: %s', headers["Session"])
 
         # retry request with updated headers
         return request_next(path, is_retry=True)
 
-    log.info("GET %s %s", url(path), response_json.get("secret") or "")
+    log.info("GET %s %s", create_url(path), response_json.get("secret") or "")
     log.debug("Response: %s", response.text)
     return response
 

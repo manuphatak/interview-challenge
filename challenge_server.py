@@ -48,8 +48,11 @@ def validate_session(function):
     def wrapper(*args, **kwargs):
         session = request.headers.get("Session")
         app.logger.debug("Session: %s" % session)
-        if not cache.has(session):
+        if not session:
             return response_error(session_missing_message, 401)
+
+        if not cache.has(session):
+            return response_error(session_expired_message, 403)
 
         if cache.get(session) <= 0:
             return response_error(session_expired_message, 403)
