@@ -7,14 +7,13 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "3.9.0"
-Flask = "0.10.1"
-Werkzeug = "0.11.4"
+Flask = "1.1.2"
+Flask-Caching = "^1.9.0"
 
 
 [tool.poetry.dev-dependencies]
-requests = "2.9.1"
+requests = "2.24.0"
 black = {version = "^20.8b1", allow-prereleases = true}
-future = "^0.18.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

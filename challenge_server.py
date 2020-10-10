@@ -7,6 +7,7 @@ from functools import wraps
 from hashlib import md5
 
 from flask import Flask, jsonify, request
+from flask_caching.backends import FileSystemCache
 
 
 log_file = os.path.join(os.path.dirname(__file__), "challenge_server.log")
@@ -18,23 +19,8 @@ file_handler.setLevel(logging.INFO)
 app = Flask(__name__)
 app.logger.addHandler(file_handler)
 
-try:
-    # noinspection PyUnresolvedReferences
-    from redislite import StrictRedis
+cache = FileSystemCache("./tmp/.cache", default_timeout=300)
 
-    # noinspection PyUnresolvedReferences
-    from werkzeug.contrib.cache import RedisCache
-
-    cache_file = os.path.join(os.path.dirname(__file__), "server_cache.rdb")
-
-    cache = RedisCache(StrictRedis(cache_file))
-except ImportError:
-    from werkzeug.contrib.cache import SimpleCache
-
-    cache = SimpleCache()
-    app.logger.warning(
-        "redislite could not be imported. Falling back to non-thread-safe caching"
-    )
 
 try:
     with open("message.json") as f:
@@ -46,9 +32,9 @@ except IOError:
     )
 
 
-def response_error(message):
+def response_error(message, status_code):
     response = jsonify(error=message)
-    response.status_code = 404
+    response.status_code = status_code
     return response
 
 
@@ -62,15 +48,15 @@ def validate_session(function):
     def wrapper(*args, **kwargs):
         session = request.headers.get("Session")
         app.logger.debug("Session: %s" % session)
-        if not session:
-            return response_error(session_missing_message)
+        if not cache.has(session):
+            return response_error(session_missing_message, 401)
 
-        elif cache.get(session) <= 0:
-            return response_error(session_expired_message)
-        else:
-            cache.dec(session)
-            app.logger.info("Key: %s, Value: %s" % (session, cache.get(session)))
-            return function(*args, **kwargs)
+        if cache.get(session) <= 0:
+            return response_error(session_expired_message, 403)
+
+        cache.dec(session)
+        app.logger.info("Key: %s, Value: %s" % (session, cache.get(session)))
+        return function(*args, **kwargs)
 
     return wrapper
 
@@ -86,7 +72,7 @@ def start(page_id):
     try:
         return jsonify(secret_message[page_id])
     except KeyError:
-        return response_error("Page not found")
+        return response_error("Page not found", 404)
 
 
 @app.route("/get-session")
