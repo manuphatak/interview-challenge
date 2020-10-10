@@ -77,7 +77,7 @@ def get_next_secret(path):
         traceback = sys.exc_info()[2]
         message = 'Missing "next" key in response'
         log_response_error(message, headers.get("Session"), url(path), response_data)
-        raise KeyError, message, traceback
+        raise (KeyError, message, traceback)
 
     else:
         next_list = response_data["next"]
@@ -107,14 +107,14 @@ def request_next(path, is_retry=False):
             traceback = sys.exc_info()[2]
             message = 'Unable to refresh "Session" token.'
             log_response_error(message, headers["Session"], url(path), response_json)
-            raise type(e), message, traceback
+            raise (type(e), message, traceback)
 
         # Guard, unexpected error
         if not response_json.get("error"):
             traceback = sys.exc_info()[2]
             message = '"error" key missing from response.'
             log_response_error(message, headers["Session"], url(path), response_json)
-            raise type(e), message, traceback
+            raise (type(e), message, traceback)
 
         # request new Session header
         headers["Session"] = requests.get(url("get-session")).text

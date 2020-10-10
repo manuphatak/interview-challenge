@@ -7,6 +7,7 @@ depth.  The characters of the message are revealed on the `MAX_DEPTH`.
 
 The tree is dynamically generated, you're free to customize the message.
 """
+
 import json
 import logging
 import re
@@ -45,9 +46,9 @@ logger = logging.getLogger(__name__)
 
 def make_document(depth, **kwargs):
     """
-    Impersonate mongodb document storage.
+    Impersonate MongoDB document storage.
 
-    The original puzzle was likely served from a mongodb, this is simulating that
+    The original puzzle was likely served from a MongoDB, this is simulating that
     document structure.
     """
     random_and_unique_things = "{:f}{:f}{}".format(clock(), time(), urandom(32))
@@ -97,7 +98,7 @@ def group_nodes(child_doc_list, group_depth):
     while child_doc_list:
         try:
             parent_next = []
-            for _ in xrange(randint(1, 4)):  # chunk size
+            for _ in range(randint(1, 4)):  # chunk size
                 child_doc = child_doc_list.popleft()
                 parent_next.append(child_doc["id"])
 
@@ -123,7 +124,7 @@ def expand_message():
     """Build all of the documents in order from MAX_DEPTH up to depth 0."""
     groups = [[make_document(MAX_DEPTH, secret=letter) for letter in END_MESSAGE]]
 
-    for i in reversed(xrange(1, MAX_DEPTH)):
+    for i in reversed(range(1, MAX_DEPTH)):
         groups.append(group_nodes(groups[-1], i))
 
     start_page = dict(
