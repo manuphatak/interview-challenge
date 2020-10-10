@@ -8,7 +8,7 @@ import sys
 from argparse import ArgumentParser
 from functools import partial
 from textwrap import dedent
-from urlparse import urljoin
+from urllib.parse import urljoin
 
 import requests
 
