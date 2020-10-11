@@ -1,5 +1,5 @@
 **/__pycache__
 .vscode/
-challenge_server.log
+**/*.log
 tmp/
 message.json

@@ -16,30 +16,31 @@ setup:
 
 migrate:
 	rm -f message.json
-	poetry run python migrate.py
+	poetry run python src/migrate.py
 
 start: clean
-	poetry run python challenge_server.py
+	poetry run python src/challenge_server.py
 
 stop: clean
 	curl -X POST http://127.0.0.1:5000/shutdown
 
 solve:
-	poetry run python solution/solution.py
+	poetry run python src/solution/solution.py
 
 solve-verbose:
-	poetry run python solution/solution.py --verbose
+	poetry run python src/solution/solution.py --verbose
 
 solve-live:
-	poetry run python solution/solution.py --base http://interview-challenge.manuphatak.com
+	poetry run python src/solution/solution.py --base http://interview-challenge.manuphatak.com
 
 solve-live-verbose:
-	poetry run python solution/solution.py --base http://interview-challenge.manuphatak.com --verbose
+	poetry run python src/solution/solution.py --base http://interview-challenge.manuphatak.com --verbose
 
 clean:
-	rm -f challenge_server.log
-	rm -rf tmp/.cache
+	rm -rf tmp
+	find . -name '*.log' -exec rm -f {} +
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
+	find . -name '__pycache__' -exec rm -rf {} +
 

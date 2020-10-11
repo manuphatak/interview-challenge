@@ -21,6 +21,6 @@ RUN poetry run migrate
 ENV FLASK_APP=challenge_server.py
 EXPOSE 5000
 # ENTRYPOINT ["poetry", "run", "flask", "run", "--host=0.0.0.0"]
-ENTRYPOINT ["poetry", "run", "gunicorn", "--workers=4", "--bind=0.0.0.0:5000", "wsgi:app"]
+ENTRYPOINT ["poetry", "run", "gunicorn", "--workers=4", "--bind=0.0.0.0:5000", "src.wsgi:app"]
 
 

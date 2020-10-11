@@ -11,14 +11,15 @@ from flask import Flask, jsonify, request
 from flask_caching.backends import FileSystemCache
 
 
+app = Flask(__name__)
 log_file = os.path.join(os.path.dirname(__file__), "challenge_server.log")
 file_handler = logging.handlers.RotatingFileHandler(
-    log_file, maxBytes=50000, backupCount=5, encoding="utf-8"
+    log_file, maxBytes=1024 * 1024, backupCount=5
 )
-file_handler.setLevel(logging.INFO)
-
-app = Flask(__name__)
+logging.getLogger("werkzeug").setLevel(logging.INFO)
+app.logger.setLevel(logging.INFO)
 app.logger.addHandler(file_handler)
+
 
 cache = FileSystemCache("./tmp/.cache", default_timeout=300)
 
