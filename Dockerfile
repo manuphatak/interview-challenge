@@ -6,18 +6,18 @@ WORKDIR /app
 ENV \
   POETRY_VERSION=1.1.2 \
   POETRY_HOME="/opt/poetry" \
-  POETRY_NO_INTERACTION=1
+  POETRY_NO_INTERACTION=1 \
+  FLASK_APP=challenge_server.py
 
 RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
 ENV PATH="$POETRY_HOME/bin:$POETRY_VIRTUALENVS_PATH/bin:$PATH"
 
-COPY . .
+COPY pyproject.toml poetry.lock ./
 RUN poetry install
-RUN poetry run migrate
 
+COPY . ./
+RUN poetry run python src/migrate.py
 
-ENV FLASK_APP=challenge_server.py
 EXPOSE 5000
-ENTRYPOINT ["poetry", "run", "gunicorn", "--workers=4", "--bind=0.0.0.0:5000", "src.wsgi:app"]
-
+ENTRYPOINT ["poetry", "run", "gunicorn", "src.wsgi:app"]
 

@@ -1,0 +1,8 @@
+version: "3.8"
+
+services:
+  web:
+    volumes:
+      - ./sockets:/sockets
+    environment:
+      GUNICORN_CMD_ARGS: '--workers=4 --bind=unix:/sockets/proxy.sock'

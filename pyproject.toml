@@ -7,9 +7,6 @@ license = "MIT"
 readme = "README.md"
 repository = "https://github.com/bionikspoon/interview-challenge"
 keywords = ["scavenger hunt", "flask", "brain teaser", "interview challenge"]
-packages = [
-    { include = "src/**/*.py" },
-]
 
 [tool.poetry.dependencies]
 python = "3.9.0"
@@ -25,9 +22,3 @@ black = {version = "^20.8b1", allow-prereleases = true}
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-
-[tool.poetry.scripts]
-migrate = "src.migrate:run"
-challenge_server = "src.challenge_server:run"
-solve = "src.solution:run"
