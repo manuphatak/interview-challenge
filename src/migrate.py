@@ -19,7 +19,9 @@ from random import randint, random, choice
 from textwrap import wrap
 from uuid import uuid4
 
-END_MESSAGE = "Congratulations!  Send your solution to bionikspoon@gmail.com to receive your prize."
+END_MESSAGE = (
+    "Congratulations!  Send your solution to scavenger@phatak.io to receive your prize."
+)
 """The message to be expanded by the node tree"""
 
 START_MESSAGE = (
