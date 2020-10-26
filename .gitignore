@@ -1,3 +1,5 @@
-*.json
-*.rdb*
-*.log*
+__pycache__/
+.vscode/
+challenge_server.log
+tmp/
+message.json

@@ -1,0 +1,33 @@
+[tool.poetry]
+name = "interview-challenge"
+version = "0.0.0"
+description = "A fun web service scavenger hunt and brain teaser. Programmatically search for the next clue!"
+authors = ["Manu Phatak <bionikspoon@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/bionikspoon/interview-challenge"
+keywords = ["scavenger hunt", "flask", "brain teaser", "interview challenge"]
+packages = [
+    { include = "src/**/*.py" },
+]
+
+[tool.poetry.dependencies]
+python = "3.9.0"
+Flask = "1.1.2"
+Flask-Caching = "1.9.0"
+gunicorn = "20.0.4"
+requests = "2.24.0"
+
+
+[tool.poetry.dev-dependencies]
+black = {version = "^20.8b1", allow-prereleases = true}
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.poetry.scripts]
+migrate = "src.migrate:run"
+challenge_server = "src.challenge_server:run"
+solve = "src.solution:run"

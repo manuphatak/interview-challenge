@@ -12,35 +12,35 @@ help:
 	@echo "clean                remove file artifacts"
 
 setup:
-	pip2 install -U -r requirements.txt
-	pip2 install -U -r requirements-extras.txt
+	poetry install
 
 migrate:
 	rm -f message.json
-	python2 migrate.py
+	poetry run python src/migrate.py
 
-start:
-	python2 challenge_server.py &
-	xdg-open http://127.0.0.1:5000/
+start: clean
+	poetry run python src/challenge_server.py
 
-stop:
+stop: clean
 	curl -X POST http://127.0.0.1:5000/shutdown
 
-solve: clean
-	python2 solution/solution.py
+solve:
+	poetry run python src/solution/solution.py
 
-solve-verbose: clean
-	python2 solution/solution.py --verbose
+solve-verbose:
+	poetry run python src/solution/solution.py --verbose
 
-solve-live: clean
-	python2 solution/solution.py --url http://interview-challenge.manuphatak.com
+solve-live:
+	poetry run python src/solution/solution.py --base http://interview-challenge.manuphatak.com
 
-solve-live-verbose: clean
-	python2 solution/solution.py --url http://interview-challenge.manuphatak.com --verbose
+solve-live-verbose:
+	poetry run python src/solution/solution.py --base http://interview-challenge.manuphatak.com --verbose
 
 clean:
-	rm -f redis.log
+	rm -rf tmp
+	find . -name '*.log' -exec rm -f {} +
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
+	find . -name '__pycache__' -exec rm -rf {} +
 
