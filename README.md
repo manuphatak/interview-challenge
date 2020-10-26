@@ -1,6 +1,6 @@
 # interview-challenge
 
-**A fun web service scavenger hunt and brain teaser. Programmatically search for the next clue!**
+**A fun web API scavenger hunt and brain teaser. Programmatically search for the next clue!**
 
 ----------
 
