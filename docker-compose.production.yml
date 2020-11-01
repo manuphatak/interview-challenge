@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   web:
+    restart: always
     volumes:
       - ./sockets:/sockets
     environment:
