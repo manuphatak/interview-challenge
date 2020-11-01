@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   web:
-    image: bionikspoon/interview-challenge
+    image: bionikspoon/interview-challenge:latest
     restart: always
     volumes:
       - ./sockets:/sockets

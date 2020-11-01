@@ -1,4 +1,4 @@
-.PHONY: help setup clean start stop migrate solve solve-verbose solve-live solve-live-verbose development-build development-up production-build production-up
+.PHONY: help setup clean start stop migrate solve solve-verbose solve-live solve-live-verbose build up production
 
 help:
 	@echo "setup                pip install requirements"
@@ -10,10 +10,9 @@ help:
 	@echo "solve-live           demonstrate solution on a live server"
 	@echo "solve-live-verbose   demonstrate solution on a live server with detailed output"
 	@echo "clean                remove file artifacts"
-	@echo "development-build    build docker compose"
-	@echo "development-up       serve docker compose"
-	@echo "production-build     build docker compose"
-	@echo "production-up        serve docker compose"
+	@echo "build                build docker compose"
+	@echo "up                   serve docker compose"
+	@echo "production           serve docker compose in a production environment"
 
 setup:
 	poetry install
@@ -48,15 +47,12 @@ clean:
 	find . -name '*~' -exec rm -f {} +
 	find . -name '__pycache__' -exec rm -rf {} +
 
-development-build:
-	docker-compose -f docker-compose.yml -f docker-compose.development.yml build
+build:
+	docker-compose build
 
-development-up:
-	docker-compose -f docker-compose.yml -f docker-compose.development.yml up
+up:
+	docker-compose up
 
-production-build:
-	docker-compose -f docker-compose.yml -f docker-compose.production.yml build
-
-production-up:
-	docker-compose -f docker-compose.yml -f docker-compose.production.yml up
+production:
+	docker-compose -f docker-compose.production.yml up
 
