@@ -1,8 +1,13 @@
 services:
-  - docker
-
+- docker
+addons:
+  snaps:
+  - heroku
 deploy:
   provider: script
   script: bash .travis/docker_push
   on:
     branch: heroku
+env:
+  global:
+    secure: T8/8U4O8jIcq/jrbJw1sNpg5H5YNN6rpsGhhW/7sqMZs7JryJCNHEvy2+bbqpQChvkMtg17CNksLzdMdNa4lOc5kO7yscFubRRQsjm2WWr1+DMK8RwB/zKBlcB1/dtCoc/dRpy9WVtBuMKbiXnVUaWxtlgp4AHXKnoUwQ6Y623g=

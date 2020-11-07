@@ -2,7 +2,8 @@
 
 set -eou PIPEFAIL
 
-echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin registry.heroku.com
+heroku container:login
 
-heroku container:push
+heroku container:push web
 
+heroku container:release web
