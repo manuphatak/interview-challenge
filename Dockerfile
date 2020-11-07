@@ -19,5 +19,7 @@ COPY . ./
 RUN poetry run python src/migrate.py
 
 EXPOSE 5000
-ENTRYPOINT ["poetry", "run", "gunicorn", "src.wsgi:app"]
+CMD poetry run gunicorn --bind 0.0.0.0:$PORT src.wsgi:app
+
+# ENTRYPOINT ["poetry", "run", "gunicorn", "src.wsgi:app"]
 
