@@ -1,8 +1,10 @@
+language: python
 services:
 - docker
 addons:
-  snaps:
-  - heroku
+  apt:
+    sources:
+      - heroku
 deploy:
   provider: script
   script: bash .travis/docker_push
