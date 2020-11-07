@@ -7,7 +7,6 @@ addons:
       - heroku
 
 before_deploy:
-  - heroku login
   - heroku container:login
 deploy:
   provider: script
