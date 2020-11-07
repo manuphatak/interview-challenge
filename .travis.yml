@@ -5,16 +5,11 @@ addons:
   apt:
     sources:
     - heroku
-before_deploy:
-- ( echo "$HEROKU_EMAIL"; echo "$HEROKU_API_KEY" ) | heroku login
-- heroku container:login
 deploy:
   provider: script
   script: heroku container:push web
   on:
     branch: heroku
-after_deploy:
-- bash .travis/docker_release
 env:
   global:
   - secure: DeOXA2m7mq6Y85PBR9cPb3CbrkIzwluDfF5MJ2uy7s9Kn6IA+y2nwb8YyI3JesZkeQmfw7CzeTrTR7WZWBhcGP9b1myQEgbK+p34ZVgwamJUjXQ/h9EXX9VBC8xhL8hYg7z9qMFdvxf6sh6S61j8t0fz56z5XY0AW8ZhoXJUucg=

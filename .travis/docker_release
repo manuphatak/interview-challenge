@@ -1,7 +1,0 @@
-#!/bin/bash
-
-set -euo pipefail
-
-heroku login
-
-heroku container:release web
