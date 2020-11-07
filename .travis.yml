@@ -5,11 +5,17 @@ addons:
   apt:
     sources:
       - heroku
+
+before_deploy:
+  - heroku login
+  - heroku container:login
 deploy:
   provider: script
-  script: bash .travis/docker_push
+  script: heroku container:push web
   on:
     branch: heroku
+after_deploy:
+  - bash .travis/docker_release
 env:
   global:
     secure: T8/8U4O8jIcq/jrbJw1sNpg5H5YNN6rpsGhhW/7sqMZs7JryJCNHEvy2+bbqpQChvkMtg17CNksLzdMdNa4lOc5kO7yscFubRRQsjm2WWr1+DMK8RwB/zKBlcB1/dtCoc/dRpy9WVtBuMKbiXnVUaWxtlgp4AHXKnoUwQ6Y623g=
