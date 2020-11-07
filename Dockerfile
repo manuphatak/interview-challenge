@@ -7,6 +7,7 @@ ENV \
   POETRY_VERSION=1.1.2 \
   POETRY_HOME="/opt/poetry" \
   POETRY_NO_INTERACTION=1 \
+  POETRY_VIRTUALENVS_CREATE=false \
   FLASK_APP=challenge_server.py
 
 RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
