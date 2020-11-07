@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eou PIPEFAIL
+set -euo pipefail
 
 heroku container:login
 
