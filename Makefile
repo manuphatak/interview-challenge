@@ -28,16 +28,16 @@ stop: clean
 	curl -X POST http://127.0.0.1:5000/shutdown
 
 solve:
-	poetry run python src/solution/solution.py
+	poetry run python src/solution.py
 
 solve-verbose:
-	poetry run python src/solution/solution.py --verbose
+	poetry run python src/solution.py --verbose
 
 solve-live:
-	poetry run python src/solution/solution.py --base http://interview-challenge.manuphatak.com
+	poetry run python src/solution.py --base http://interview-challenge.manuphatak.com
 
 solve-live-verbose:
-	poetry run python src/solution/solution.py --base http://interview-challenge.manuphatak.com --verbose
+	poetry run python src/solution.py --base http://interview-challenge.manuphatak.com --verbose
 
 clean:
 	rm -rf tmp
